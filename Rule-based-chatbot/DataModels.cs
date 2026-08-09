@@ -39,6 +39,7 @@ namespace WIKI_AI_PROJECT.Rulebasedchatbot
         CollectingQuestion,
         Answering,
         WaitingForConfirmation,
+        WaitingForIntentSelection,
         Escalating,
         Finished
     }

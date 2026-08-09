@@ -33,7 +33,7 @@ namespace WIKI_AI_PROJECT.Rulebasedchatbot
                 Helpers.DetermineIntents(currentTurn);
 
                 //bool continueChat = Helpers.HandleAction(action);
-                bool continueChat = Helpers.HandleInput(currentTurn, conversation);
+                bool continueChat = Helpers.HandleDetectedIntents(currentTurn, conversation);
 
                 if (!continueChat)
                 {

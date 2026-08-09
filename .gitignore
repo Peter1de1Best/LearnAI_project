@@ -24,3 +24,6 @@ obj/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Documentation for myself:
+ToDo.md

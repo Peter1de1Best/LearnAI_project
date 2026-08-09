@@ -124,26 +124,52 @@ namespace WIKI_AI_PROJECT.Rulebasedchatbot
             }
         }
 
-        public bool HandleInput(ChatTurn currentTurn, Conversation conversation)
+
+
+        public bool HandleDetectedIntents(ChatTurn currentTurn, Conversation conversation)
         {
-            
             if (currentTurn.Analysis.PossibleIntents.Count == 0)
             {
                 return UnknownQuestion(conversation);
             }
+            
+            if (currentTurn.Analysis.PossibleIntents.Contains(ChatIntent.PasswordSee))
+            {
+                if (currentTurn.Analysis.PossibleIntents.Count == 1)
+                {
+                    return AnswerQuestion(conversation, Config.UnsupportedIntents[ChatIntent.PasswordSee]);
+                }
+                else
+                {
+                    Console.WriteLine($"Als u bedoelde: {Config.UnsupportedIntents[ChatIntent.PasswordSee]}, dan is dat helaas niet mogelijk.");
+                    currentTurn.Analysis.PossibleIntents.Remove(ChatIntent.PasswordSee);
+                }
+            }
 
-            if (currentTurn.Analysis.PossibleIntents.Count >= 1)
+            if (currentTurn.Analysis.PossibleIntents.Count == 1)
             {
                 ChatIntent intent = currentTurn.Analysis.PossibleIntents.First();
 
                 return AnswerQuestion(conversation, Config.IntentToAnswerLookup[intent]);
             }
-            Console.WriteLine("Issue in HandleInput");
-            return false;
-            // later moet bovenstaande if worden beperkt tot:
-            //                   => currentTurn.Analysis.PossibleIntents.Count == 1
-            // en dan moet hieronder een afhandeling voor meerdere intents worden gebouwd.
+
+            return AskForIntentClarification(currentTurn);
+        }
+
+        //public bool HandleDetectedIntents(ChatTurn currentTurn, Conversation conversation)
+        //{
+        //    
+        //}
+
+        public bool RejectQuestion(Conversation conversation, string answer)
+        {
+            conversation.Stage = ChatStage.CollectingQuestion;
+
+            Console.WriteLine(answer);
             
+            Console.WriteLine("DEAD END");
+
+            return true;
         }
 
         public bool AnswerQuestion(Conversation conversation, string answer)
@@ -165,6 +191,27 @@ namespace WIKI_AI_PROJECT.Rulebasedchatbot
             );
 
             conversation.Stage = ChatStage.CollectingQuestion;
+
+            return true;
+        }
+
+        private bool AskForIntentClarification(ChatTurn currentTurn)
+        {
+            Console.WriteLine("Ik begrijp meerdere mogelijke vragen:");
+
+            foreach (ChatIntent intent in currentTurn.Analysis.PossibleIntents.ToList())
+            {
+
+
+                if (intent == ChatIntent.PasswordSee)
+                {
+
+                }
+
+                Console.WriteLine($"{currentTurn.Analysis.PossibleIntents.IndexOf(intent) + 1}. {Config.IntentToQuestionLookup[intent]}");
+            }
+
+            Console.WriteLine("Welke vraag bedoelt u?");
 
             return true;
         }

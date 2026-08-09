@@ -112,6 +112,11 @@ namespace WIKI_AI_PROJECT.Rulebasedchatbot
 
         };
 
+        public static readonly Dictionary<ChatIntent, string> UnsupportedIntents = new()
+        {
+            {ChatIntent.PasswordSee, "U vraagt om uw wachtwoord in te zien, maar dat kan niet om veiligheidsredenen."}
+        };
+
         public static readonly Dictionary<string, ChatObject> InputObjectNormalization = new()
         {
             { "rekeningnummer", ChatObject.Rekeningnummer },
@@ -136,8 +141,15 @@ namespace WIKI_AI_PROJECT.Rulebasedchatbot
         {
             {ChatIntent.ChangeBankAccount, "You can change your bank account via the link: LINK"},
             {ChatIntent.ChangeDirectDebitBankAccount, "You can change your direct debit (automatische incasso) bank account via the link: LINK"},
-            {ChatIntent.PasswordChange, "You can change or restore your password via the link: LINK"},
-            {ChatIntent.PasswordSee, "You cannot see your password for security reasons, but upon necessary verication, you can change or restore your password via the link: LINK"}
+            {ChatIntent.PasswordChange, "You can change or restore your password via the link: LINK"},        
+        };
+
+        public static readonly Dictionary<ChatIntent, string> IntentToQuestionLookup = new()
+        {
+            {ChatIntent.PasswordSee, "Ik wil mijn wachtwoord inzien"},// Beschrijving van de intent blijft behouden, ook als deze intent niet ondersteund wordt
+            {ChatIntent.PasswordChange, "Ik wil mijn wachtwoord wijzigen"},
+            {ChatIntent.ChangeBankAccount, "Ik wil mijn rekeningnummer wijzigen"},
+            {ChatIntent.ChangeDirectDebitBankAccount, "Ik wil mijn automatische incasso rekeningnummer wijzigen"}
         };
 
 
